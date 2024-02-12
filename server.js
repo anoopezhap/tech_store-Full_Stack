@@ -19,6 +19,7 @@ const mongoose = require("mongoose");
 //All routers
 const root = require("./routes/root");
 const userRouter = require("./routes/userRoutes");
+const noteRouter = require("./routes/noteRoutes");
 
 connectDB();
 
@@ -33,8 +34,8 @@ app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, "public")));
 
 app.use("/", root);
-
 app.use("/users", userRouter);
+app.use("/notes", noteRouter);
 
 app.all("*", (req, res) => {
   res.status(404);

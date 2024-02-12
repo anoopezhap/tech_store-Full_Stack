@@ -23,7 +23,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 const createNewUser = asyncHandler(async (req, res) => {
   const { username, password, roles } = req.body;
 
-  console.log(req.body);
+  //console.log(req.body);
 
   //confirm data
   if (!username || !password || !Array.isArray(roles) || !roles?.length) {
@@ -121,7 +121,7 @@ const deleteUser = asyncHandler(async (req, res) => {
   //does the user exist to delete
   const user = await User.findById(id).exec();
 
-  console.log(user);
+  //console.log(user);
 
   if (!user) {
     return res.status(400).json({ message: "User not found" });
@@ -129,7 +129,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 
   const result = await user.deleteOne();
 
-  console.log(result);
+  //console.log(result);
 
   const reply = `Username ${result.username} with ID ${result._id} deleted`;
 

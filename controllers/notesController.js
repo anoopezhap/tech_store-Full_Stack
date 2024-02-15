@@ -32,7 +32,8 @@ const getAllNotes = asyncHandler(async (req, res) => {
 //@access Private
 
 const createNewNote = asyncHandler(async (req, res) => {
-  const { user, title, text } = req.body;
+  //console.log("body inside controller", req.body);
+  const { title, text, user } = req.body;
 
   //confirm data
   if (!user || !title || !text) {
@@ -62,6 +63,9 @@ const createNewNote = asyncHandler(async (req, res) => {
 
 const updateNote = asyncHandler(async (req, res) => {
   const { id, user, title, text, completed } = req.body;
+
+  // console.log("inside controller");
+  // console.log("inside controller", req.body);
 
   //confirm data
   if (!id || !user || !title || !text || typeof completed !== "boolean") {

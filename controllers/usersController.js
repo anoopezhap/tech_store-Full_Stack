@@ -106,8 +106,12 @@ const updateUser = asyncHandler(async (req, res) => {
 const deleteUser = asyncHandler(async (req, res) => {
   const { id } = req.body;
 
+  // console.log("req", req);
+
+  // console.log("id inside controller", id);
+
   if (!id) {
-    res.status(400).json({ message: "User ID required" });
+    return res.status(400).json({ message: "User ID required" });
   }
 
   //if a note exists for a user. We don't want to delete the user

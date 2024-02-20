@@ -20,6 +20,7 @@ const mongoose = require("mongoose");
 const root = require("./routes/root");
 const userRouter = require("./routes/userRoutes");
 const noteRouter = require("./routes/noteRoutes");
+const authRouter = require("./routes/authRoutes");
 
 connectDB();
 
@@ -36,6 +37,7 @@ app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, "public")));
 
 app.use("/", root);
+app.use("/auth", authRouter);
 app.use("/users", userRouter);
 app.use("/notes", noteRouter);
 
@@ -60,7 +62,7 @@ mongoose.connection.once("open", () => {
 
 //for failed mongodb connections
 mongoose.connection.on("error", (err) => {
-  console.log(error);
+  console.log(err);
   logEvents(
     `${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`,
     "mongoErrLog.log"

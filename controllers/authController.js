@@ -27,6 +27,9 @@ const login = asyncHandler(async (req, res) => {
     return res.status(401).json({ message: "Invalid username or password" });
   }
 
+  // console.log("access", process.env.ACCESS_TOKEN_SECRET);
+  // console.log("refresh", process.env.REFRESH_TOKEN_SECRET);
+
   //creating access token
 
   const accessToken = jwt.sign(
@@ -37,7 +40,7 @@ const login = asyncHandler(async (req, res) => {
       },
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "10s" }
+    { expiresIn: "1m" }
   );
 
   //creating refreshtoken
@@ -54,7 +57,7 @@ const login = asyncHandler(async (req, res) => {
     httpOnly: true, //accessible only by web server
     secure: true, //https
     sameSite: "None", //cross-site cookie
-    maxAge: 7 * 24 * 60 * 60 * 1000, //to match refresh toklen expiry
+    maxAge: 7 * 24 * 60 * 60 * 1000, //to match refresh token expiry
   });
 
   //send back accessToken containing username and roles
@@ -95,7 +98,7 @@ const refresh = (req, res) => {
           },
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "10s" }
+        { expiresIn: "1m" }
       );
 
       res.json({ accessToken });
@@ -113,7 +116,7 @@ const logout = (req, res) => {
     return res.sendStatus(204);
   }
 
-  res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: tru });
+  res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
 
   res.json({ message: "cookie cleared" });
 };

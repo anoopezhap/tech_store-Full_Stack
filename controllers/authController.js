@@ -40,7 +40,7 @@ const login = asyncHandler(async (req, res) => {
       },
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "1m" }
+    { expiresIn: "20" }
   );
 
   //creating refreshtoken
@@ -55,9 +55,10 @@ const login = asyncHandler(async (req, res) => {
 
   res.cookie("jwt", refreshToken, {
     httpOnly: true, //accessible only by web server
-    secure: true, //https
+    secure: false, //https
     sameSite: "None", //cross-site cookie
     maxAge: 7 * 24 * 60 * 60 * 1000, //to match refresh token expiry
+    path: "/auth/refresh",
   });
 
   //send back accessToken containing username and roles
@@ -69,10 +70,14 @@ const login = asyncHandler(async (req, res) => {
 //@acess Public - because access token has expired
 
 const refresh = (req, res) => {
+  console.log("inside refresh");
   const cookies = req.cookies;
+  console.log("cookies", cookies);
 
   if (!cookies?.jwt) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res
+      .status(401)
+      .json({ message: "Unauthorized:No refresh token cookie found" });
   }
 
   const refreshToken = cookies.jwt;
@@ -82,12 +87,16 @@ const refresh = (req, res) => {
     process.env.REFRESH_TOKEN_SECRET,
     asyncHandler(async (err, decoded) => {
       if (err) {
-        return res.status(403).json({ message: "Forbidden" });
+        return res
+          .status(403)
+          .json({ message: "Forbidden: Wrong refresh token cookie" });
       }
 
       const foundUser = await User.findOne({ username: decoded.username });
       if (!foundUser) {
-        res.status(401).json({ message: "Unauthorized" });
+        res
+          .status(401)
+          .json({ message: "Unauthorized: wrong cookie send, no user found" });
       }
 
       const accessToken = jwt.sign(
@@ -98,9 +107,9 @@ const refresh = (req, res) => {
           },
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "1m" }
+        { expiresIn: "20" }
       );
-
+      //res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
       res.json({ accessToken });
     })
   );

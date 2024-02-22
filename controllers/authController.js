@@ -40,7 +40,7 @@ const login = asyncHandler(async (req, res) => {
       },
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "20" }
+    { expiresIn: "1m" }
   );
 
   //creating refreshtoken
@@ -55,10 +55,10 @@ const login = asyncHandler(async (req, res) => {
 
   res.cookie("jwt", refreshToken, {
     httpOnly: true, //accessible only by web server
-    secure: false, //https
-    sameSite: "None", //cross-site cookie
+    secure: true, //https
+    sameSite: "none", //cross-site cookie
     maxAge: 7 * 24 * 60 * 60 * 1000, //to match refresh token expiry
-    path: "/auth/refresh",
+    path: "http://localhost:3500/auth/refresh",
   });
 
   //send back accessToken containing username and roles
@@ -107,7 +107,7 @@ const refresh = (req, res) => {
           },
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "20" }
+        { expiresIn: "1m" }
       );
       //res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
       res.json({ accessToken });

@@ -23,10 +23,10 @@ const verifyJWT = (req, res, next) => {
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
-      console.log(err);
+      //console.log(err);
       return res.status(403).json({ message: "Forbidden:token expired" });
     }
-    console.log("decoded", decoded);
+    //console.log("decoded", decoded);
     req.user = decoded.UserInfo.username;
     req.roles = decoded.UserInfo.roles;
     next();

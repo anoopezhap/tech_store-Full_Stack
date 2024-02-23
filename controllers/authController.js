@@ -56,9 +56,8 @@ const login = asyncHandler(async (req, res) => {
   res.cookie("jwt", refreshToken, {
     httpOnly: true, //accessible only by web server
     secure: true, //https
-    sameSite: "none", //cross-site cookie
+    sameSite: "None", //cross-site cookie
     maxAge: 7 * 24 * 60 * 60 * 1000, //to match refresh token expiry
-    path: "http://localhost:3500/auth/refresh",
   });
 
   //send back accessToken containing username and roles

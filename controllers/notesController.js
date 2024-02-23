@@ -117,7 +117,7 @@ const deleteNote = asyncHandler(async (req, res) => {
 
   const result = await note.deleteOne();
 
-  console.log(result);
+  //console.log(result);
 
   const reply = `Note ${result.title} with ID ${result._id} is deleted`;
 

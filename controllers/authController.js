@@ -40,7 +40,7 @@ const login = asyncHandler(async (req, res) => {
       },
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "1m" }
+    { expiresIn: "15m" }
   );
 
   //creating refreshtoken
@@ -48,7 +48,7 @@ const login = asyncHandler(async (req, res) => {
   const refreshToken = jwt.sign(
     { username: foundUser.username },
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: "1d" }
+    { expiresIn: "7d" }
   );
 
   //create secure cookie with refresh token
@@ -70,14 +70,14 @@ const login = asyncHandler(async (req, res) => {
 //@acess Public - because access token has expired
 
 const refresh = (req, res) => {
-  console.log("inside refresh");
+  //console.log("inside refresh");
   const cookies = req.cookies;
-  console.log("cookies", cookies);
+  // console.log("cookies", cookies);
 
   if (!cookies?.jwt) {
     return res
       .status(401)
-      .json({ message: "Unauthorized:No refresh token cookie found" });
+      .json({ message: "Unauthorized:Refresh Token Expired" });
   }
 
   const refreshToken = cookies.jwt;
@@ -89,7 +89,7 @@ const refresh = (req, res) => {
       if (err) {
         return res
           .status(403)
-          .json({ message: "Forbidden: Wrong refresh token cookie" });
+          .json({ message: "Forbidden: Refresh Token Expired" });
       }
 
       const foundUser = await User.findOne({ username: decoded.username });
@@ -107,7 +107,7 @@ const refresh = (req, res) => {
           },
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "1m" }
+        { expiresIn: "15m" }
       );
       //res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
       res.json({ accessToken });
